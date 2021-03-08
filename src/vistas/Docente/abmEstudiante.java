@@ -1,0 +1,914 @@
+package vistas.Docente;
+
+import Controlador.GestorBD;
+import Model.Barrios;
+import Model.Estudiantes;
+import Model.Localidades;
+import Model.Nacionalidades;
+import Model.Salas;
+import java.awt.Image;
+import java.awt.Toolkit;
+import Model.TiposDocumentos;
+import java.awt.Color;
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.QUESTION_MESSAGE;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import vistas.Directivo.principalDirectivo;
+
+public class abmEstudiante extends javax.swing.JFrame {
+
+    GestorBD g = new GestorBD();
+    private static final String PASS = "123";
+    private static final String USER = "sa";
+    private static final String CADENA = "jdbc:sqlserver://DESKTOP-ANUONV0:1433;databaseName=KASprueba";
+    String ventana = "";
+
+    DefaultComboBoxModel cboModelDoc = new DefaultComboBoxModel();
+    DefaultComboBoxModel cboModelNac = new DefaultComboBoxModel();
+    DefaultComboBoxModel cboModelLoc = new DefaultComboBoxModel();
+    DefaultComboBoxModel cboModelBar = new DefaultComboBoxModel();
+    DefaultComboBoxModel cboModelSala = new DefaultComboBoxModel();
+    ArrayList<TiposDocumentos> listDoc = g.getDocumentos();
+    ArrayList<Nacionalidades> listNac = g.getNacionalidades();
+    ArrayList<Localidades> listLoc = g.getLocalidades();
+    ArrayList<Barrios> listBar = g.getBarrios();
+    ArrayList<Salas> listSala = g.getSalas();
+    int idEstuModificar = 0;
+    int idFamilia = 0;
+
+    public abmEstudiante() {
+        initComponents();
+        actualizarTabla(idFamilia);
+        Desactivar();
+        for (TiposDocumentos tiposDocumentos : listDoc) {
+            cboModelDoc.addElement(tiposDocumentos.getDescripcion());
+        }
+        for (Nacionalidades nacionalidades : listNac) {
+            cboModelNac.addElement(nacionalidades.getDescripcion());
+        }
+        for (Localidades localidades : listLoc) {
+            cboModelLoc.addElement(localidades.getDescripcion());
+        }
+        for (Barrios barrios : listBar) {
+            cboModelBar.addElement(barrios.getDescripcion());
+        }
+        for (Salas salas : listSala) {
+            cboModelSala.addElement(salas.getDescripcion());
+        }
+        cboTiposDocumentosEstu.setModel(cboModelDoc);
+        cboNacionEstu.setModel(cboModelNac);
+        cboLocalidadesEstu.setModel(cboModelLoc);
+        cboBarrioEstu.setModel(cboModelBar);
+        cboSalas.setModel(cboModelSala);
+        btnDeleteEstu.setEnabled(false);
+    }
+
+    public void familia(int idFamilia) {
+        this.idFamilia = idFamilia;
+        actualizarTabla(idFamilia);
+    }
+
+    @Override
+    public Image getIconImage() {
+        Image logo = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/DIAPOSITIVA1.jpg"));
+
+        return logo;
+    }
+
+    public void actualizarTabla(int idFlia) {
+        DefaultTableModel tmodel = new DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        ArrayList<Estudiantes> list = g.getEstudiantes();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tmodel.setColumnIdentifiers(new Object[]{"id Estudiante", "Nombre", "Apellido", "Fecha Nacimiento"});
+        for (Estudiantes estudiantes : list) {
+            if (estudiantes.getIdFamilia() == idFlia) {
+                tmodel.addRow(new Object[]{estudiantes.getIdEstudiante(), estudiantes.getNombre(), estudiantes.getApellido(), estudiantes.getFechaNac()});
+            }
+        }
+        tblRegEstu.setModel(tmodel);
+        tblRegEstu.getTableHeader().setBackground(new Color(153, 255, 153));
+        tblRegEstu.getTableHeader().setFont(new Font("Century Gothic", Font.BOLD, 12));
+        tblRegEstu.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tblRegEstu.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblRegEstu.getColumnModel().getColumn(0).setMinWidth(0);
+        tblRegEstu.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tblRegEstu.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        tblRegEstu.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tblRegEstu.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        panel2 = new org.edisoncor.gui.panel.Panel();
+        btnInsertEstu = new org.edisoncor.gui.button.ButtonColoredAction();
+        btnUpdateEstu = new org.edisoncor.gui.button.ButtonColoredAction();
+        btnDeleteEstu = new org.edisoncor.gui.button.ButtonColoredAction();
+        txtNombreEstu = new org.edisoncor.gui.textField.TextField();
+        txtApellidoEstu = new org.edisoncor.gui.textField.TextField();
+        txtNroDocEstu = new org.edisoncor.gui.textField.TextField();
+        cboTiposDocumentosEstu = new javax.swing.JComboBox<>();
+        cboNacionEstu = new javax.swing.JComboBox<>();
+        cboBarrioEstu = new javax.swing.JComboBox<>();
+        txtGeneroEstu = new org.edisoncor.gui.textField.TextField();
+        txtDomicilioEstu = new org.edisoncor.gui.textField.TextField();
+        lblNombreEstu = new javax.swing.JLabel();
+        lblTipoDocEstu = new javax.swing.JLabel();
+        lblApellidoEstu = new javax.swing.JLabel();
+        lblNroDocEstu = new javax.swing.JLabel();
+        lblNacionEstu = new javax.swing.JLabel();
+        lblGeneroEstu = new javax.swing.JLabel();
+        lblDomicilioEstu = new javax.swing.JLabel();
+        lblBarrioEstu = new javax.swing.JLabel();
+        lblFecNacEstu = new javax.swing.JLabel();
+        cboLocalidadesEstu = new javax.swing.JComboBox<>();
+        lblLocalEstu = new javax.swing.JLabel();
+        pnl2Estudiante = new org.edisoncor.gui.panel.Panel();
+        lblRegDocente = new javax.swing.JLabel();
+        btnCerrar = new javax.swing.JButton();
+        btnMinimizar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblRegEstu = new javax.swing.JTable();
+        jdpFecNacEstu = new org.jdesktop.swingx.JXDatePicker();
+        btnGuardarModEstu = new org.edisoncor.gui.button.ButtonColoredAction();
+        btnNuevoEstu = new org.edisoncor.gui.button.ButtonColoredAction();
+        lblSala = new javax.swing.JLabel();
+        cboSalas = new javax.swing.JComboBox<>();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("KAS - REGISTRO DE ESTUDIANTES");
+        setIconImage(getIconImage());
+        setName("frmEstudiante"); // NOI18N
+        setUndecorated(true);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
+
+        panel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/otroFondo2.jpg"))); // NOI18N
+
+        btnInsertEstu.setBackground(new java.awt.Color(51, 51, 51));
+        btnInsertEstu.setBorder(null);
+        btnInsertEstu.setText("AGREGAR");
+        btnInsertEstu.setColorDeSombra(new java.awt.Color(51, 51, 51));
+        btnInsertEstu.setDireccionDeSombra(0);
+        btnInsertEstu.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        btnInsertEstu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnInsertEstu.setProfundidad(new java.lang.Float(0.0F));
+        btnInsertEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInsertEstuActionPerformed(evt);
+            }
+        });
+
+        btnUpdateEstu.setBackground(new java.awt.Color(51, 51, 51));
+        btnUpdateEstu.setBorder(null);
+        btnUpdateEstu.setText("MODIFICAR");
+        btnUpdateEstu.setColorDeSombra(new java.awt.Color(51, 51, 51));
+        btnUpdateEstu.setDireccionDeSombra(0);
+        btnUpdateEstu.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        btnUpdateEstu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnUpdateEstu.setProfundidad(new java.lang.Float(0.0F));
+        btnUpdateEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateEstuActionPerformed(evt);
+            }
+        });
+
+        btnDeleteEstu.setBackground(new java.awt.Color(51, 51, 51));
+        btnDeleteEstu.setBorder(null);
+        btnDeleteEstu.setText("ELIMINAR");
+        btnDeleteEstu.setColorDeSombra(new java.awt.Color(51, 51, 51));
+        btnDeleteEstu.setDireccionDeSombra(0);
+        btnDeleteEstu.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        btnDeleteEstu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDeleteEstu.setProfundidad(new java.lang.Float(0.0F));
+        btnDeleteEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteEstuActionPerformed(evt);
+            }
+        });
+
+        txtNombreEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+
+        txtApellidoEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+
+        txtNroDocEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+
+        cboTiposDocumentosEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        cboTiposDocumentosEstu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        cboNacionEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        cboNacionEstu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        cboBarrioEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        cboBarrioEstu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txtGeneroEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+
+        txtDomicilioEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+
+        lblNombreEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblNombreEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblNombreEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblNombreEstu.setText("Nombres: ");
+        lblNombreEstu.setOpaque(true);
+
+        lblTipoDocEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblTipoDocEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblTipoDocEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblTipoDocEstu.setText("Tipo de Documento: ");
+        lblTipoDocEstu.setOpaque(true);
+
+        lblApellidoEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblApellidoEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblApellidoEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblApellidoEstu.setText("Apellidos: ");
+        lblApellidoEstu.setOpaque(true);
+
+        lblNroDocEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblNroDocEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblNroDocEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblNroDocEstu.setText("Nro de Documento: ");
+        lblNroDocEstu.setOpaque(true);
+
+        lblNacionEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblNacionEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblNacionEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblNacionEstu.setText("Nacionalidad: ");
+        lblNacionEstu.setOpaque(true);
+
+        lblGeneroEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblGeneroEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblGeneroEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblGeneroEstu.setText("Genero: ");
+        lblGeneroEstu.setOpaque(true);
+
+        lblDomicilioEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblDomicilioEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblDomicilioEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblDomicilioEstu.setText("Domicilio: ");
+        lblDomicilioEstu.setOpaque(true);
+
+        lblBarrioEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblBarrioEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblBarrioEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblBarrioEstu.setText("Barrio: ");
+        lblBarrioEstu.setOpaque(true);
+
+        lblFecNacEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblFecNacEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblFecNacEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblFecNacEstu.setText("Fecha de Nacimiento: ");
+        lblFecNacEstu.setOpaque(true);
+
+        cboLocalidadesEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        cboLocalidadesEstu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        cboLocalidadesEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboLocalidadesEstuActionPerformed(evt);
+            }
+        });
+
+        lblLocalEstu.setBackground(new java.awt.Color(0, 102, 0));
+        lblLocalEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblLocalEstu.setForeground(new java.awt.Color(153, 255, 153));
+        lblLocalEstu.setText("Localidad:");
+        lblLocalEstu.setOpaque(true);
+
+        pnl2Estudiante.setBackground(new java.awt.Color(0, 0, 0));
+        pnl2Estudiante.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        pnl2Estudiante.setColorPrimario(new java.awt.Color(0, 0, 0));
+        pnl2Estudiante.setName(""); // NOI18N
+
+        lblRegDocente.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        lblRegDocente.setForeground(new java.awt.Color(255, 255, 255));
+        lblRegDocente.setText(" REGISTRO DE ESTUDIANTES");
+
+        btnCerrar.setBackground(new java.awt.Color(0, 0, 0));
+        btnCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/descarga.png"))); // NOI18N
+        btnCerrar.setBorderPainted(false);
+        btnCerrar.setContentAreaFilled(false);
+        btnCerrar.setFocusPainted(false);
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarActionPerformed(evt);
+            }
+        });
+
+        btnMinimizar.setBackground(new java.awt.Color(0, 0, 0));
+        btnMinimizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/minimo.png"))); // NOI18N
+        btnMinimizar.setBorderPainted(false);
+        btnMinimizar.setContentAreaFilled(false);
+        btnMinimizar.setFocusPainted(false);
+        btnMinimizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMinimizarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnl2EstudianteLayout = new javax.swing.GroupLayout(pnl2Estudiante);
+        pnl2Estudiante.setLayout(pnl2EstudianteLayout);
+        pnl2EstudianteLayout.setHorizontalGroup(
+            pnl2EstudianteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl2EstudianteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblRegDocente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnMinimizar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        pnl2EstudianteLayout.setVerticalGroup(
+            pnl2EstudianteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl2EstudianteLayout.createSequentialGroup()
+                .addGroup(pnl2EstudianteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnMinimizar)
+                    .addGroup(pnl2EstudianteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lblRegDocente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCerrar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        tblRegEstu.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        tblRegEstu.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tblRegEstu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRegEstuMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblRegEstu);
+
+        jdpFecNacEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jdpFecNacEstuActionPerformed(evt);
+            }
+        });
+
+        btnGuardarModEstu.setBackground(new java.awt.Color(51, 51, 51));
+        btnGuardarModEstu.setBorder(null);
+        btnGuardarModEstu.setText("GUARDAR");
+        btnGuardarModEstu.setColorDeSombra(new java.awt.Color(51, 51, 51));
+        btnGuardarModEstu.setDireccionDeSombra(0);
+        btnGuardarModEstu.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        btnGuardarModEstu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnGuardarModEstu.setProfundidad(new java.lang.Float(0.0F));
+        btnGuardarModEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarModEstuActionPerformed(evt);
+            }
+        });
+
+        btnNuevoEstu.setBackground(new java.awt.Color(51, 51, 51));
+        btnNuevoEstu.setBorder(null);
+        btnNuevoEstu.setText("NUEVO");
+        btnNuevoEstu.setColorDeSombra(new java.awt.Color(51, 51, 51));
+        btnNuevoEstu.setDireccionDeSombra(0);
+        btnNuevoEstu.setFont(new java.awt.Font("Century Gothic", 1, 15)); // NOI18N
+        btnNuevoEstu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnNuevoEstu.setProfundidad(new java.lang.Float(0.0F));
+        btnNuevoEstu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoEstuActionPerformed(evt);
+            }
+        });
+
+        lblSala.setBackground(new java.awt.Color(0, 102, 0));
+        lblSala.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        lblSala.setForeground(new java.awt.Color(153, 255, 153));
+        lblSala.setText("Sala asignada: ");
+        lblSala.setOpaque(true);
+
+        cboSalas.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
+        cboSalas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
+        panel2.setLayout(panel2Layout);
+        panel2Layout.setHorizontalGroup(
+            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnl2Estudiante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel2Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblDomicilioEstu)
+                            .addComponent(lblBarrioEstu)
+                            .addComponent(lblLocalEstu)
+                            .addComponent(lblGeneroEstu)
+                            .addComponent(lblFecNacEstu)
+                            .addComponent(lblNacionEstu)
+                            .addComponent(lblNroDocEstu)
+                            .addComponent(lblTipoDocEstu)
+                            .addComponent(lblApellidoEstu)
+                            .addComponent(lblNombreEstu)
+                            .addComponent(lblSala))
+                        .addGap(40, 40, 40)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cboSalas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtApellidoEstu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboNacionEstu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtNroDocEstu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboTiposDocumentosEstu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtNombreEstu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtGeneroEstu, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                            .addComponent(jdpFecNacEstu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboLocalidadesEstu, 0, 251, Short.MAX_VALUE)
+                            .addComponent(cboBarrioEstu, 0, 251, Short.MAX_VALUE)
+                            .addComponent(txtDomicilioEstu, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                        .addContainerGap(88, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
+                        .addComponent(btnNuevoEstu, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnUpdateEstu, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnDeleteEstu, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(164, 164, 164)
+                        .addComponent(btnGuardarModEstu, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
+                        .addComponent(btnInsertEstu, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88))))
+        );
+        panel2Layout.setVerticalGroup(
+            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel2Layout.createSequentialGroup()
+                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel2Layout.createSequentialGroup()
+                        .addComponent(pnl2Estudiante, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel2Layout.createSequentialGroup()
+                        .addGap(91, 91, 91)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNombreEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNombreEstu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtApellidoEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblApellidoEstu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboTiposDocumentosEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblTipoDocEstu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNroDocEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNroDocEstu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboNacionEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNacionEstu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblFecNacEstu)
+                            .addComponent(jdpFecNacEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblGeneroEstu)
+                            .addComponent(txtGeneroEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblLocalEstu)
+                            .addComponent(cboLocalidadesEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblBarrioEstu)
+                            .addComponent(cboBarrioEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDomicilioEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDomicilioEstu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblSala)
+                            .addComponent(cboSalas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnInsertEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUpdateEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardarModEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevoEstu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
+        int respuesta = JOptionPane.showConfirmDialog(null, "¿Desea cerrar la ventana?", "Selecione un Opción", YES_NO_OPTION, QUESTION_MESSAGE);
+        if (respuesta == 0) {
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnCerrarActionPerformed
+
+    int xx, xy;
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+
+        this.setLocation(x - xx, y - xy);
+
+    }//GEN-LAST:event_formMouseDragged
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        xx = evt.getX();
+        xy = evt.getY();
+    }//GEN-LAST:event_formMousePressed
+
+    private void btnInsertEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertEstuActionPerformed
+        try {
+            Connection conexion = DriverManager.getConnection(CADENA, USER, PASS);
+            PreparedStatement ps = conexion.prepareStatement("exec procInsertEstudiantes ?,?,?,?,?,?,?,?,?,?");
+
+            ps.setString(1, txtNombreEstu.getText());
+            ps.setString(2, txtApellidoEstu.getText());
+            for (TiposDocumentos tiposDocumentos : listDoc) {
+                if (tiposDocumentos.getDescripcion().equals(cboTiposDocumentosEstu.getSelectedItem())) {
+                    ps.setInt(3, tiposDocumentos.getIdTipoDocumento());
+                }
+            }
+            ps.setInt(4, Integer.parseInt(txtNroDocEstu.getText()));
+            for (Nacionalidades nacionalidades : listNac) {
+                if (nacionalidades.getDescripcion().equals(cboNacionEstu.getSelectedItem())) {
+                    ps.setInt(5, nacionalidades.getIdNacionalidad());
+                }
+            }
+            java.sql.Date fechaNac = new java.sql.Date(jdpFecNacEstu.getDate().getTime());
+            ps.setDate(6, fechaNac);
+            ps.setString(7, txtGeneroEstu.getText());
+            for (Barrios barrios : listBar) {
+                if (barrios.getDescripcion().equals(cboBarrioEstu.getSelectedItem())) {
+                    ps.setInt(8, barrios.getIdBarrio());
+                }
+            }
+            ps.setString(9, txtDomicilioEstu.getText());
+            for (Salas sala : listSala) {
+                if (sala.getDescripcion().equals(cboSalas.getSelectedItem())) {
+                    System.out.println(sala.getDescripcion());
+                    ps.setInt(10, sala.getIdSala());
+                }
+            }
+
+            ps.execute();
+
+            ps.close();
+            conexion.close();
+            actualizarTabla(idFamilia);
+            limpiar();
+            Desactivar();
+            JOptionPane.showMessageDialog(null, "Cargado con exito");
+        } catch (SQLException ex) {
+            System.out.println("Error metodo AGREGAR ALUMNO " + ex);
+        }
+
+    }//GEN-LAST:event_btnInsertEstuActionPerformed
+
+    private void jdpFecNacEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jdpFecNacEstuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jdpFecNacEstuActionPerformed
+
+    private void btnDeleteEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteEstuActionPerformed
+        try {
+            int idEstuDelete = (int) tblRegEstu.getValueAt(tblRegEstu.getSelectedRow(), 0);
+            int respuesta = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el estudiante?", "Selecione una Opción", YES_NO_OPTION, QUESTION_MESSAGE);
+            if (respuesta == 0) {
+                g.EliminarEstudiante(idEstuDelete);
+            }
+            actualizarTabla(idFamilia);
+            JOptionPane.showMessageDialog(null, "Registro eliminado con éxito");
+        } catch (Exception e) {
+            System.out.println("Error metodo eliminar ALUMNO ");
+        }
+    }//GEN-LAST:event_btnDeleteEstuActionPerformed
+
+
+    private void btnUpdateEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateEstuActionPerformed
+        idEstuModificar = (int) tblRegEstu.getValueAt(tblRegEstu.getSelectedRow(), 0);
+        ArrayList<Estudiantes> list = g.getEstudiantes();
+        for (Estudiantes x : list) {
+            if (x.getIdEstudiante() == idEstuModificar) {
+                txtNombreEstu.setText(x.getNombre());
+                txtApellidoEstu.setText(x.getApellido());
+                for (TiposDocumentos tiposDocumentos : listDoc) {
+                    if (tiposDocumentos.getIdTipoDocumento() == x.getIdTipoDocumento()) {
+                        cboTiposDocumentosEstu.setSelectedItem(tiposDocumentos.getDescripcion());
+                    }
+                }
+                txtNroDocEstu.setText(x.getDocumento() + "");
+                for (Nacionalidades nacionalidades : listNac) {
+                    if (nacionalidades.getIdNacionalidad() == x.getIdNacionalidad()) {
+                        cboNacionEstu.setSelectedItem(nacionalidades.getDescripcion());
+                    }
+                }
+                jdpFecNacEstu.setDate(x.getFechaNac());
+                txtGeneroEstu.setText(x.getGenero());
+                for (Barrios barrios : listBar) {
+                    if (barrios.getIdBarrio() == x.getIdBarrio()) {
+                        cboBarrioEstu.setSelectedItem(barrios.getDescripcion());
+                        for (Localidades localidades : listLoc) {
+                            if (localidades.getIdLocalidad() == x.getIdBarrio()) {
+                                cboLocalidadesEstu.setSelectedItem(localidades.getDescripcion());
+                            }
+                        }
+                    }
+                }
+                txtDomicilioEstu.setText(x.getDomicilio());
+                for (Salas salas : listSala) {
+                    if (salas.getIdSala() == x.getIdSala()) {
+                        cboSalas.setSelectedItem(salas.getDescripcion());
+                    }
+                }
+            }
+        }
+
+        txtNombreEstu.setEnabled(true);
+        txtApellidoEstu.setEnabled(true);
+        txtDomicilioEstu.setEnabled(true);
+        txtGeneroEstu.setEnabled(true);
+        txtNroDocEstu.setEnabled(true);
+        jdpFecNacEstu.setEnabled(true);
+        cboBarrioEstu.setEnabled(true);
+        cboLocalidadesEstu.setEnabled(true);
+        cboNacionEstu.setEnabled(true);
+        cboTiposDocumentosEstu.setEnabled(true);
+        cboSalas.setEnabled(true);
+        btnGuardarModEstu.setEnabled(true);
+        btnDeleteEstu.setEnabled(false);
+    }//GEN-LAST:event_btnUpdateEstuActionPerformed
+
+    private void btnGuardarModEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModEstuActionPerformed
+        String nombre = txtNombreEstu.getText();
+        String apellido = txtApellidoEstu.getText();
+        int idTipoDocumento = 0;
+        for (TiposDocumentos tiposDocumentos : listDoc) {
+            if (tiposDocumentos.getDescripcion().equals(cboTiposDocumentosEstu.getSelectedItem())) {
+                idTipoDocumento = (tiposDocumentos.getIdTipoDocumento());
+            }
+        }
+        int documento = Integer.parseInt(txtNroDocEstu.getText());
+        int idNacionalidad = 0;
+        for (Nacionalidades nacionalidades : listNac) {
+            if (nacionalidades.getDescripcion().equals(cboNacionEstu.getSelectedItem())) {
+                idNacionalidad = (nacionalidades.getIdNacionalidad());
+            }
+        }
+        java.sql.Date fechaNac = new java.sql.Date(jdpFecNacEstu.getDate().getTime());
+        String genero = txtGeneroEstu.getText();
+        int idBarrio = 0;
+        for (Barrios barrios : listBar) {
+            if (barrios.getDescripcion().equals(cboBarrioEstu.getSelectedItem())) {
+                idBarrio = (barrios.getIdBarrio());
+            }
+        }
+        String domicilio = txtDomicilioEstu.getText();
+        int idSala = 0;
+        for (Salas sala : listSala) {
+            if (sala.getDescripcion().equals(cboSalas.getSelectedItem())) {
+                idSala = (sala.getIdSala());
+            }
+        }
+
+        Estudiantes e = new Estudiantes(fechaNac, idSala, nombre, apellido, idTipoDocumento, documento, idBarrio, idNacionalidad, genero, domicilio);
+        g.ModificarEstudiante(e);
+        limpiar();
+        actualizarTabla(idFamilia);
+        btnUpdateEstu.setEnabled(false);
+        btnInsertEstu.setEnabled(false);
+        btnDeleteEstu.setEnabled(true);
+        btnNuevoEstu.setEnabled(true);
+        btnGuardarModEstu.setEnabled(false);
+        JOptionPane.showMessageDialog(null, "Guardado con exito");
+    }//GEN-LAST:event_btnGuardarModEstuActionPerformed
+
+    private void cboLocalidadesEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboLocalidadesEstuActionPerformed
+        int idLocalidad = 0;
+        cboBarrioEstu.removeAllItems();
+        for (Localidades localidades : listLoc) {
+            if (localidades.getDescripcion() == cboLocalidadesEstu.getSelectedItem()) {
+                idLocalidad = localidades.getIdLocalidad();
+            }
+        }
+        for (Barrios barrios : listBar) {
+            if (barrios.getIdLocalidad() == idLocalidad) {
+                cboBarrioEstu.addItem(barrios.getDescripcion());
+            }
+        }
+    }//GEN-LAST:event_cboLocalidadesEstuActionPerformed
+
+    private void btnMinimizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMinimizarActionPerformed
+        this.setExtendedState(1);
+    }//GEN-LAST:event_btnMinimizarActionPerformed
+
+    private void btnNuevoEstuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEstuActionPerformed
+        activarNuevo();
+        limpiar();
+        jdpFecNacEstu.setEnabled(true);
+    }//GEN-LAST:event_btnNuevoEstuActionPerformed
+
+    private void tblRegEstuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRegEstuMouseClicked
+        btnUpdateEstu.setEnabled(true);
+        btnInsertEstu.setEnabled(false);
+        btnDeleteEstu.setEnabled(true);
+        btnNuevoEstu.setEnabled(false);
+        btnGuardarModEstu.setEnabled(false);
+    }//GEN-LAST:event_tblRegEstuMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(abmEstudiante.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(abmEstudiante.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(abmEstudiante.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(abmEstudiante.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new abmEstudiante().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrar;
+    private org.edisoncor.gui.button.ButtonColoredAction btnDeleteEstu;
+    private org.edisoncor.gui.button.ButtonColoredAction btnGuardarModEstu;
+    private org.edisoncor.gui.button.ButtonColoredAction btnInsertEstu;
+    private javax.swing.JButton btnMinimizar;
+    private org.edisoncor.gui.button.ButtonColoredAction btnNuevoEstu;
+    private org.edisoncor.gui.button.ButtonColoredAction btnUpdateEstu;
+    private javax.swing.JComboBox<String> cboBarrioEstu;
+    private javax.swing.JComboBox<String> cboLocalidadesEstu;
+    private javax.swing.JComboBox<String> cboNacionEstu;
+    private javax.swing.JComboBox<String> cboSalas;
+    private javax.swing.JComboBox<String> cboTiposDocumentosEstu;
+    private javax.swing.JScrollPane jScrollPane2;
+    private org.jdesktop.swingx.JXDatePicker jdpFecNacEstu;
+    private javax.swing.JLabel lblApellidoEstu;
+    private javax.swing.JLabel lblBarrioEstu;
+    private javax.swing.JLabel lblDomicilioEstu;
+    private javax.swing.JLabel lblFecNacEstu;
+    private javax.swing.JLabel lblGeneroEstu;
+    private javax.swing.JLabel lblLocalEstu;
+    private javax.swing.JLabel lblNacionEstu;
+    private javax.swing.JLabel lblNombreEstu;
+    private javax.swing.JLabel lblNroDocEstu;
+    private javax.swing.JLabel lblRegDocente;
+    private javax.swing.JLabel lblSala;
+    private javax.swing.JLabel lblTipoDocEstu;
+    private org.edisoncor.gui.panel.Panel panel2;
+    private org.edisoncor.gui.panel.Panel pnl2Estudiante;
+    private javax.swing.JTable tblRegEstu;
+    private org.edisoncor.gui.textField.TextField txtApellidoEstu;
+    private org.edisoncor.gui.textField.TextField txtDomicilioEstu;
+    private org.edisoncor.gui.textField.TextField txtGeneroEstu;
+    private org.edisoncor.gui.textField.TextField txtNombreEstu;
+    private org.edisoncor.gui.textField.TextField txtNroDocEstu;
+    // End of variables declaration//GEN-END:variables
+    private void activarNuevo() {
+        txtNombreEstu.setEnabled(true);
+        txtApellidoEstu.setEnabled(true);
+        txtDomicilioEstu.setEnabled(true);
+        txtGeneroEstu.setEnabled(true);
+        txtNroDocEstu.setEnabled(true);
+        jdpFecNacEstu.setEnabled(true);
+        cboBarrioEstu.setSelectedIndex(0);
+        cboBarrioEstu.setEnabled(true);
+        cboLocalidadesEstu.setSelectedIndex(0);
+        cboLocalidadesEstu.setEnabled(true);
+        cboNacionEstu.setSelectedIndex(0);
+        cboNacionEstu.setEnabled(true);
+        cboTiposDocumentosEstu.setSelectedIndex(0);
+        cboTiposDocumentosEstu.setEnabled(true);
+        cboSalas.setSelectedIndex(0);
+        cboSalas.setEnabled(true);
+        btnInsertEstu.setEnabled(true);
+        btnDeleteEstu.setEnabled(false);
+        btnUpdateEstu.setEnabled(false);
+        btnNuevoEstu.setEnabled(false);
+        btnGuardarModEstu.setEnabled(false);
+    }
+
+    private void limpiar() { 
+        txtNombreEstu.setText("");
+        txtApellidoEstu.setText("");
+        txtDomicilioEstu.setText("");
+        txtGeneroEstu.setText("");
+        txtNroDocEstu.setText("");
+        jdpFecNacEstu.setEnabled(false);
+        cboBarrioEstu.setSelectedIndex(-1);
+        cboLocalidadesEstu.setSelectedIndex(-1);
+        cboNacionEstu.setSelectedIndex(-1);
+        cboTiposDocumentosEstu.setSelectedIndex(-1);
+        cboSalas.setSelectedIndex(-1);
+    }
+
+    private void Desactivar() {
+
+        txtNombreEstu.setEnabled(false);
+        txtApellidoEstu.setEnabled(false);
+        txtDomicilioEstu.setEnabled(false);
+        txtGeneroEstu.setEnabled(false);
+        txtNroDocEstu.setEnabled(false);
+        jdpFecNacEstu.setEnabled(false);
+        cboBarrioEstu.setSelectedIndex(-1);
+        cboBarrioEstu.setEnabled(false);
+        cboLocalidadesEstu.setSelectedIndex(-1);
+        cboLocalidadesEstu.setEnabled(false);
+        cboNacionEstu.setSelectedIndex(-1);
+        cboNacionEstu.setEnabled(false);
+        cboTiposDocumentosEstu.setSelectedIndex(-1);
+        cboTiposDocumentosEstu.setEnabled(false);
+        cboSalas.setSelectedIndex(-1);
+        cboSalas.setEnabled(false);
+        btnInsertEstu.setEnabled(false);
+        btnGuardarModEstu.setEnabled(false);
+        btnUpdateEstu.setEnabled(false);
+        btnDeleteEstu.setEnabled(false);
+        btnNuevoEstu.setEnabled(true);
+    }
+}
